@@ -6,23 +6,36 @@ $get_browser = [];
 if (isset($_POST['submit']) && isset($_POST['user_agent'])) {
     $agent = $_POST['user_agent'];
 }
+
 $browserArray = array(
+    'Aloha Browser' => 'AlohaBrowser',
+    'Yandex Browser' => 'YaBrowser',
     'Microsoft Edge' => 'Edg',
-    'Opera' => '(OPR)|(OPX)',
+    'Opera' => array('OPR', 'OPX', 'OPT'),
     'Vivaldi' => 'Vivaldi',
-    'Firefox' => 'Firefox',
+    'Firefox' => array('Firefox', 'FxiOS'),
     "Samsung Browser" => 'SamsungBrowser',
-    'Chrome' => 'Chrome',
+    'Chrome' => array('Chrome', 'CriOS'),
     'Internet Explorer' => 'MSIE',
-    'Safari' => 'Safari'
+    'DuckDuckGo' => 'Ddg',
+    'Safari' => 'Safari',
 );
 
 $get_browser['browser'] = "Other";
 
-foreach ($browserArray as $k => $v) {
-    if (preg_match("/$v/", $agent)) {
-        $get_browser['browser'] = $k;
-        break;
+foreach ($browserArray as $k => $V) {
+    if (is_array($V)){
+        foreach ($V as $v){
+            if (preg_match("/$v/", $agent)) {
+                $get_browser['browser'] = $k;
+                break 2;
+            }
+        }
+    } else {
+        if (preg_match("/$V/", $agent)) {
+            $get_browser['browser'] = $k;
+            break;
+        }
     }
 }
 
@@ -39,7 +52,7 @@ $platformArray = array(
     'Windows 8' => 'Windows NT 6.2',
     'Windows 8.1' => 'Windows NT 6.3',
     'Windows 7' => '(Windows NT 6.1)|(Windows NT 7.0)',
-    'Windows 10' => 'Windows NT 10.0',
+    'Windows 10/11' => 'Windows NT 10.0',
     'Linux' => '(X11)|(Linux)',
     'iOS' => '(Apple-iPhone)|(iPhone)|(iPhone OS)',
     'macOS' => '(Mac_PowerPC)|(Macintosh)|(Mac OS)'
